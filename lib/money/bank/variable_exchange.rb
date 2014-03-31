@@ -150,7 +150,7 @@ class Money
       #   bank.set_rate("USD", "CAD", 1.24515)
       #   bank.set_rate("CAD", "USD", 0.803115)
       def set_rate(from, to, rate, opts = {})
-        fn = -> { @rates[rate_key_for(from, to)] = rate }
+        fn = lambda { @rates[rate_key_for(from, to)] = rate }
         if opts[:without_mutex]
           fn.call
         else
@@ -176,7 +176,7 @@ class Money
       #   bank.get_rate("USD", "CAD") #=> 1.24515
       #   bank.get_rate("CAD", "USD") #=> 0.803115
       def get_rate(from, to, opts = {})
-        fn = -> { @rates[rate_key_for(from, to)] }
+        fn = lambda { @rates[rate_key_for(from, to)] }
         if opts[:without_mutex]
           fn.call
         else
@@ -209,7 +209,7 @@ class Money
           RATE_FORMATS.include? format
 
         s = ""
-        fn = -> {
+        fn = lambda {
           s = case format
               when :json
                 JSON.dump(@rates)
@@ -254,7 +254,7 @@ class Money
         raise Money::Bank::UnknownRateFormat unless
           RATE_FORMATS.include? format
 
-        fn = -> {
+        fn = lambda {
           @rates = case format
                    when :json
                      JSON.load(s)
